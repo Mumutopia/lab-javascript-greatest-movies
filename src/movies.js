@@ -359,15 +359,18 @@ function howManyMovies(movies) {
 // Iteration 3: All scores average - Get the average of all scores with 2 decimals
 function scoresAverage(movies) {
   if (!movies.length) {return 0 };
-  const director = movies.map((word) => word.score);
-  const summ = director.reduce((toto, tata) => toto + tata);
-  return Number((summ / director.length).toFixed(2));
+  const moviesWithScore = movies.filter(movie => typeof movie.score !== "undefined");
+  const moviesScore = moviesWithScore.map((word) => word.score);
+  const summ = moviesScore.reduce((toto, tata) => toto + tata,0);
+  return Number((summ / moviesScore.length).toFixed(2));
 }
+
 
 // Iteration 4: Drama movies - Get the average of Drama Movies
 function dramaMoviesScore(movies) {
-  if (!movies.length) return 0 ;
+  
   const drama = movies.filter(movie => (movie.genre.includes("Drama")))
+  if (!drama.length) return 0; 
   const movieScore = drama.map((word)=> word.score);
   const avgScore = movieScore.reduce((toto,tata)=> toto +tata);
   return Number((avgScore / movieScore.length).toFixed(2));
@@ -375,11 +378,37 @@ function dramaMoviesScore(movies) {
 
 // Iteration 5: Ordering by year - Order by year, ascending (in growing order)
 function orderByYear(movies) {
-  const sortMovies = movies.sort()
+  const sortYear = movies.slice().sort(function(a,b){
+    if (a.year < b.year) return -1;
+    if (a.year > b.year) return 1;
+    if (a.year === b.year) {
+      if (a.title < b.title) return -1;
+      if (a.title > b.title) return +1;
+    };
+ });
+ console.log(typeof sortYear);
+ return sortYear;
 }
 
+
 // Iteration 6: Alphabetic Order - Order by title and print the first 20 titles
-function orderAlphabetically() {}
+function orderAlphabetically(movies) {
+  if (movies.length >= 20 ) {
+    const sortTitle = movies.slice().sort(function(titleA,titleB) {
+     if (titleA.title > titleB.title) return 1;
+      if (titleA.title < titleB.title) return -1;
+      if (titleA.title === titleB.title) return 0;
+    }).slice(0,20).map(word => word.title);
+    return sortTitle;
+  } else if (movies.length < 20) {
+    const sortTitle = movies.slice().sort(function(titleA,titleB) {
+      if (titleA.title > titleB.title) return 1;
+       if (titleA.title < titleB.title) return -1;
+       if (titleA.title === titleB.title) return 0;
+  }).map(word => word.title);
+  return sortTitle;
+}
+}
 
 // BONUS - Iteration 7: Time Format - Turn duration of the movies from hours to minutes
 function turnHoursToMinutes() {}
